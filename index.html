@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obsidian Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #000000;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Improved smooth transitions for better flow */
+        #main-header {
+            /* Smoother cubic-bezier for a more 'liquid' feel */
+            transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                        top 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                        border-radius 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+                        backdrop-filter 0.6s ease;
+        }
+
+        /* Parallax Background Layer */
+        .parallax-bg {
+            position: fixed;
+            top: -10%;
+            left: 0;
+            width: 100%;
+            height: 120%; 
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: 0;
+            opacity: 0.3;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        /* Card styling */
+        .glass-card {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s ease, border-color 0.3s ease;
+            /* User Request: 25px rounded corners with a squircle-like smoothness */
+            border-radius: 25px;
+            /* clip-path inset with 'round' helps achieve a sharper, smoother crop than border-radius alone in some rendering engines */
+            clip-path: inset(0 round 25px);
+        }
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.01); /* Added slight scale for better flow */
+            background: rgba(30, 30, 30, 0.8);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        /* Button specific animations */
+        .nav-btn {
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            border-radius: 999px; 
+        }
+        
+        /* User Requirement: Hover border-radius 5px no matter what */
+        .nav-btn:hover {
+            border-radius: 5px !important;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        /* User Requirement: Click bounce and change to 25px */
+        .nav-btn.clicked {
+            animation: bounce-custom 0.6s cubic-bezier(0.36, 0, 0.66, -0.56); /* Smoother bounce */
+            border-radius: 25px !important;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: black;
+        }
+
+        @keyframes bounce-custom {
+            0%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-8px); }
+            60% { transform: translateY(4px); }
+        }
+
+        /* Scrollbar aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Parallax Background -->
+    <div id="parallax-layer" class="parallax-bg"></div>
+
+    <!-- Header -->
+    <!-- Reduced backdrop blur to md and added w-full to force 100% width initially -->
+    <nav id="main-header" class="fixed z-50 left-1/2 -translate-x-1/2 w-full h-20 bg-zinc-900/80 backdrop-blur-md border-b border-white/10 flex items-center justify-between px-8 shadow-2xl overflow-hidden">
+        
+        <!-- Logo -->
+        <div class="text-2xl font-bold tracking-tighter text-white relative z-10">
+            ROBOLABS LLC
+        </div>
+
+        <!-- Buttons Container -->
+        <div class="flex gap-4 relative z-10">
+            <button class="nav-btn px-6 py-2 border border-white/20 text-sm font-medium tracking-wide" onclick="animateButton(this)">HOME</button>
+            <button class="nav-btn px-6 py-2 border border-white/20 text-sm font-medium tracking-wide" onclick="animateButton(this)">WORK</button>
+            <button class="nav-btn px-6 py-2 border border-white/20 text-sm font-medium tracking-wide" onclick="animateButton(this)">ABOUT</button>
+            <button class="nav-btn px-6 py-2 bg-white text-black font-bold hover:text-white" onclick="animateButton(this)">CONTACT</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="relative z-10 pt-32 px-4 md:px-12 pb-20 max-w-7xl mx-auto w-full">
+        
+        <div class="text-center mb-24 mt-12 space-y-4">
+            <h1 class="text-6xl md:text-8xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-zinc-600">
+                ROBOLABS LLC
+            </h1>
+            <p class="text-zinc-400 text-lg max-w-2xl mx-auto">
+                Engineering • Software Development • AI Innovation
+            </p>
+        </div>
+
+        <!-- Card Grid -->
+        <!-- User Request: Twice as wide. Changed grid from lg:grid-cols-3 to lg:grid-cols-2 to widen cards significantly. -->
+        <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            
+            <!-- Card 1: EchOS -->
+            <div class="glass-card h-[32rem] p-8 flex flex-col justify-end group">
+                <div class="mb-auto self-start bg-blue-500/20 text-blue-200 text-xs font-bold px-3 py-1 rounded-full border border-blue-500/30">
+                    OS
+                </div>
+                
+                <!-- Added Image Placeholder -->
+                <img src="https://placehold.co/600x400/09090b/3b82f6?text=EchOS+Preview" alt="EchOS Preview" class="w-full h-64 object-cover rounded-xl mb-6 border border-white/5 opacity-80 group-hover:opacity-100 transition-opacity">
+
+                <div class="h-2 w-12 bg-blue-500 mb-6 rounded-full group-hover:w-24 transition-all duration-300"></div>
+                <h3 class="text-3xl font-bold mb-3">EchOS 0.3 Preview</h3>
+                <p class="text-zinc-400 text-lg">Launching Soon! Get ready for the next evolution.</p>
+            </div>
+            
+            <!-- Card 2: RingAI -->
+            <div class="glass-card h-[32rem] p-8 flex flex-col justify-end group">
+                <div class="mb-auto self-start bg-purple-500/20 text-purple-200 text-xs font-bold px-3 py-1 rounded-full border border-purple-500/30">
+                    AI
+                </div>
+
+                <!-- Added Image Placeholder -->
+                <img src="https://placehold.co/600x400/09090b/ef4444?text=RingAI+Status" alt="RingAI Status" class="w-full h-64 object-cover rounded-xl mb-6 border border-white/5 opacity-80 group-hover:opacity-100 transition-opacity">
+
+                <div class="h-2 w-12 bg-red-500 mb-6 rounded-full group-hover:w-24 transition-all duration-300"></div>
+                <h3 class="text-3xl font-bold mb-3">RingAI</h3>
+                <p class="text-zinc-400 text-lg">Down Temporally :( <br><span class="text-sm text-zinc-600">We are working on a fix.</span></p>
+            </div>
+
+        </div>
+
+        <!-- Changed h-96 to h-24 to make it smaller. Changed text to "Scroll to Top" and added functionality. -->
+        <div class="mt-24 h-24 flex items-center justify-center border-t border-zinc-900">
+            <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="text-zinc-600 hover:text-white transition-colors text-sm font-medium tracking-widest uppercase cursor-pointer">
+                Scroll to Top
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        const header = document.getElementById('main-header');
+        const parallaxLayer = document.getElementById('parallax-layer');
+
+        // Logic separated for reuse
+        function handleScroll() {
+            const scrollY = window.scrollY;
+
+            // 1. Header Transformation Logic
+            if (scrollY > 50) {
+                // Scrolled state
+                header.style.width = '90%';
+                header.style.borderRadius = '100px';
+                header.style.top = '5px';
+            } else {
+                // Initial state
+                header.style.width = '100%';
+                header.style.borderRadius = '0px';
+                header.style.top = '0px';
+            }
+
+            // 2. 5% Parallax Effect Logic
+            // Moving the background at 5% of the scroll speed
+            const offset = scrollY * 0.05;
+            // Use translate3d for hardware acceleration
+            parallaxLayer.style.transform = `translate3d(0, ${offset}px, 0)`;
+        }
+
+        // Scroll Event Listener
+        window.addEventListener('scroll', handleScroll);
+        
+        // Force check on load to ensure correct state if page is refreshed while scrolled
+        window.addEventListener('load', handleScroll);
+
+        // Button Animation Logic
+        function animateButton(btn) {
+            // Remove class if it exists to restart animation
+            btn.classList.remove('clicked');
+            
+            // Trigger reflow to allow restarting animation immediately
+            void btn.offsetWidth;
+            
+            // Add class to trigger animation and style change
+            btn.classList.add('clicked');
+
+            // Reset after animation
+            setTimeout(() => {
+                btn.classList.remove('clicked');
+            }, 600); // Matches animation duration
+        }
+    </script>
+</body>
+</html>
